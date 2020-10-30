@@ -5,6 +5,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,10 +26,15 @@ public class QRCodeUtil {
         int width = 300;
         int height = 300;
         String format = "jpg";
-        Hashtable<EncodeHintType, String> hints = new Hashtable<>();
+        Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+        hints.put(EncodeHintType.MARGIN, 1);
         hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         BitMatrix bm = new MultiFormatWriter().encode(website, BarcodeFormat.QR_CODE, width, height, hints);
         BufferedImage image = toImage(bm);
+        //设置logo图标
+        LogoConfig logoConfig = new LogoConfig();
+        image = logoConfig.logoMatrix(image);
         ImageIO.write(image, format, output);
     }
 
